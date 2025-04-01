@@ -3,10 +3,10 @@ using MonitorExchange.Dtos.Stock;
 using MonitorExchange.Models;
 using MonitorExchange.Services.StockService;
 
-namespace MonitorExchange.Controllers
+namespace MonitorExchange.Controllers.Core
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
 
     public class StockController : ControllerBase
     {
@@ -18,9 +18,9 @@ namespace MonitorExchange.Controllers
         }
 
         [HttpGet("All")]
-        public async Task<ActionResult<ServiceResponse<List<GetStockDto>>>> GetAll() 
+        public async Task<ActionResult<ServiceResponse<List<GetStockDto>>>> GetAll()
         {
-            return Ok(await _stockService.GetAllStock());       
+            return Ok(await _stockService.GetAllStock());
         }
 
         [HttpGet("{strId}")]

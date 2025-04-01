@@ -6,11 +6,11 @@ using MonitorExchange.Services.FileExchangeService;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace MonitorExchange.Controllers
+namespace MonitorExchange.Controllers.Core
 {
-    
+
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     public class FileExchangeController : ControllerBase
     {
         private readonly IFileExchangeService _fileExchangeService;
@@ -23,14 +23,8 @@ namespace MonitorExchange.Controllers
         [HttpGet("All")]
         public async Task<ActionResult<ServiceResponse<List<GetFileExchangeDto>>>> GetAll()
         {
-            return Ok( await _fileExchangeService.GetAllFileExchange());
+            return Ok(await _fileExchangeService.GetAllFileExchange());
 
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<GetFileExchangeDto>>>> GetFileExchange([FromQuery] int page, [FromQuery] int pageSize)
-        {
-            return Ok(await _fileExchangeService.GetFileExchange(page, pageSize));
         }
 
         [HttpGet("{strId}")]
@@ -38,14 +32,14 @@ namespace MonitorExchange.Controllers
         {
             return Ok(await _fileExchangeService.GetSingleFileExchangeById(strId));
 
-        }    
+        }
 
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<GetFileExchangeDto>>>> AddFileExchange(AddFileExchangeDto newFileExchange)
-        {                 
-            return Ok(await _fileExchangeService.AddFileExchange(newFileExchange));        
+        {
+            return Ok(await _fileExchangeService.AddFileExchange(newFileExchange));
         }
-        
+
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<GetFileExchangeDto>>> UpdateFileExchange(UpdateFileExchangeDto updateFileExchange)
         {

@@ -5,10 +5,10 @@ using MonitorExchange.Models;
 using MonitorExchange.Services.FileExchangeService;
 using System.Xml.Linq;
 
-namespace MonitorExchange.Controllers
-{    
+namespace MonitorExchange.Controllers.Core
+{
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     public class FileExchangeIEController : ControllerBase
     {
         private readonly IFileExchangeIEService _fileExchangeIEService;
@@ -18,8 +18,8 @@ namespace MonitorExchange.Controllers
             _fileExchangeIEService = fileExchangeIEService;
         }
 
-        [HttpGet("FEImports")]
-        public async Task<ActionResult<ServiceResponse<List<GetFEImportsDto>>>> GetFEImports([FromQuery] int page, [FromQuery] int pageSize)
+        [HttpPost("FEImports")]
+        public async Task<ActionResult<ServiceResponse<List<GetFEImportsDto>>>> GetFEImports([FromBody] int page, [FromQuery] int pageSize)
         {
             return Ok(await _fileExchangeIEService.GetFEImports(page, pageSize));
         }
@@ -37,6 +37,6 @@ namespace MonitorExchange.Controllers
         {
             return Ok(await _fileExchangeIEService.AddXMLOffers(strId, item, allIn, xml));
         }
-             
+
     }
 }

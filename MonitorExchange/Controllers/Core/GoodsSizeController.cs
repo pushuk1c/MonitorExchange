@@ -3,10 +3,10 @@ using MonitorExchange.Dtos.GoodsSize;
 using MonitorExchange.Models;
 using MonitorExchange.Services.GoodsSizeService;
 
-namespace MonitorExchange.Controllers
+namespace MonitorExchange.Controllers.Core
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
 
     public class GoodsSizeController : ControllerBase
     {

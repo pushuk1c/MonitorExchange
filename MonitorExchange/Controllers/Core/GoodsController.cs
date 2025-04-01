@@ -3,10 +3,10 @@ using MonitorExchange.Dtos.Goods;
 using MonitorExchange.Models;
 using MonitorExchange.Services.GoodsService;
 
-namespace MonitorExchange.Controllers
+namespace MonitorExchange.Controllers.Core
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
 
     public class GoodsController : ControllerBase
     {
@@ -19,9 +19,9 @@ namespace MonitorExchange.Controllers
         }
 
         [HttpGet("All")]
-        public async Task<ActionResult<ServiceResponse<List<GetGoodsDto>>>> GetAll() 
+        public async Task<ActionResult<ServiceResponse<List<GetGoodsDto>>>> GetAll()
         {
-            return Ok(await _goodsService.GetAllGoods());        
+            return Ok(await _goodsService.GetAllGoods());
         }
 
         [HttpGet("{strId}")]

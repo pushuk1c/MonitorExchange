@@ -3,10 +3,10 @@ using MonitorExchange.Data;
 using MonitorExchange.Dtos.User;
 using MonitorExchange.Models;
 
-namespace MonitorExchange.Controllers
+namespace MonitorExchange.Controllers.Core
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     public class AuthController : ControllerBase
     {
 
@@ -21,7 +21,7 @@ namespace MonitorExchange.Controllers
 
             if (respons is null)
                 return BadRequest();
-            
+
             return Ok(respons);
 
         }

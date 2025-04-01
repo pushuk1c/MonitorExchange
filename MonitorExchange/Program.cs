@@ -37,6 +37,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+//Core
 builder.Services.AddScoped<IFileExchangeService, FileExchangeService>();
 builder.Services.AddScoped<IFileExchangeIEService, FileExchangeIEService>();
 builder.Services.AddScoped<IGoodsService, GoodsService>();
@@ -44,8 +45,11 @@ builder.Services.AddScoped<IGoodsSizeService, GoodsSizeService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
-builder.Services.AddHostedService<UploadFilesExchange>();
+//WPF
+builder.Services.AddScoped<IFileExchangeServiceWPF, FileExchangeServiceWPF>();
+builder.Services.AddScoped<IFileExchangeIEServiceWPF, FileExchangeIEServiceWPF>();
 
+builder.Services.AddHostedService<UploadFilesExchange>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
      .AddJwtBearer(options =>
