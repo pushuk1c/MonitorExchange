@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MonitorExchange.Data;
 using MonitorExchange.Dtos.FileExchange;
 using MonitorExchange.Models;
+using System.Globalization;
 
 namespace MonitorExchange.Services.FileExchangeService
 {
@@ -28,11 +29,31 @@ namespace MonitorExchange.Services.FileExchangeService
                 return serviceResponsse;
             }
 
+            var query = InitializationFilters(_context.FileExchanges.AsQueryable(), fileExchangeRequest.Filters);
 
-            var query = _context.FileExchanges.AsQueryable();
+            int totalItems = await query.CountAsync();
 
+            var dbFilesExchange = await query
+                .OrderByDescending(i => i.DataCreate)
+                .ThenByDescending(i => i.Id)
+                .Skip((fileExchangeRequest.Page - 1) * fileExchangeRequest.PageSize)
+                .Take(fileExchangeRequest.PageSize)
+                .ToListAsync();
+
+            serviceResponsse.Data = dbFilesExchange.Select(f => _mapper.Map<GetFileExchangeDto>(f)).ToList();
+            serviceResponsse.Meta = new { fileExchangeRequest.Page
+                ,
+                fileExchangeRequest.PageSize
+                , totalItems};
+
+
+            return serviceResponsse;
+        }
+
+        private IQueryable<FileExchange> InitializationFilters(IQueryable<FileExchange> query, Dictionary<string, string> filters)
+        {
             // 🔍 filters
-            foreach (var filter in fileExchangeRequest.Filters)
+                foreach (var filter in filters)
             {
                 string key = filter.Key.ToLower();
                 string value = filter.Value;
@@ -65,40 +86,24 @@ namespace MonitorExchange.Services.FileExchangeService
                             query = query.Where(f => f.IsUpload == valueIsUpload);
                         break;
 
-                    /*
-                    case "datefrom":
-                        if (DateTime.TryParse(value, out var dateFrom))
-                            query = query.Where(f => f.DataCreate >= dateFrom);
-                        break;
+                    case "daterangetextbox":
 
-                    case "dateto":
-                        if (DateTime.TryParse(value, out var dateTo))
-                            query = query.Where(f => f.DataCreate <= dateTo);
+                        string[] parts = value.Split('-');
+                        if (parts.Length == 2 &&
+                            DateTime.TryParseExact(parts[0], "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime from) &&
+                            DateTime.TryParseExact(parts[1], "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime to))
+                        {
+                            query = query.Where(f => f.DataCreate >= from);
+                            query = query.Where(f => f.DataCreate <= to);
+                        }
+                       
                         break;
-                    */
-                    
+ 
                 }
             }
 
-            int totalItems = await query.CountAsync();
-
-            var dbFilesExchange = await query
-                .OrderByDescending(i => i.DataCreate)
-                .ThenByDescending(i => i.Id)
-                .Skip((fileExchangeRequest.Page - 1) * fileExchangeRequest.PageSize)
-                .Take(fileExchangeRequest.PageSize)
-                .ToListAsync();
-
-            serviceResponsse.Data = dbFilesExchange.Select(f => _mapper.Map<GetFileExchangeDto>(f)).ToList();
-            serviceResponsse.Meta = new { fileExchangeRequest.Page
-                ,
-                fileExchangeRequest.PageSize
-                , totalItems};
-
-
-            return serviceResponsse;
+            return query;
         }
-             
 
     }
 }
